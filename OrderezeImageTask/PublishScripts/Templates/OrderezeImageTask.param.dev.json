@@ -1,0 +1,29 @@
+{
+  "siteName": {
+    "value": "OrderezeImageTask"
+  },
+  "hostingPlanName": {
+    "value": "OrderezeImageTask"
+  },
+  "siteLocation": {
+    "value": "West Europe"
+  },
+  "sku": {
+    "value": "Free"
+  },
+  "workerSize": {
+    "value": "0"
+  },
+  "siteMode": {
+    "value": "Limited"
+  },
+  "computeMode": {
+    "value": "0"
+  },
+  "subscriptionId": {
+    "value": "502521ea-8f31-49a0-913e-5336ab931f4c"
+  },
+  "resourceGroup": {
+    "value": "OrderezeImageTask"
+  }
+}
