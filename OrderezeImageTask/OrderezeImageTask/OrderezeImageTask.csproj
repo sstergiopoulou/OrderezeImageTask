@@ -179,11 +179,14 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="AzureLayer\BlobFunctions.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="DataAccessLayer\IImageService.cs" />
     <Compile Include="DataAccessLayer\ImageContext.cs" />
+    <Compile Include="DataAccessLayer\ImageDBFunctions.cs" />
     <Compile Include="DataAccessLayer\ImageDBInitializer.cs" />
+    <Compile Include="DataAccessLayer\ImageService.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -241,7 +244,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="AzureLayer\" />
     <Folder Include="TestImages\" />
   </ItemGroup>
   <ItemGroup>
