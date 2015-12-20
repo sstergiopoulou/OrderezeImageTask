@@ -1,20 +1,22 @@
 ﻿using System.Collections.Generic;
 using OrderezeImageTask.Models;
 using OrderezeImageTask.AzureLayer;
+using System.Linq;
+using System.Data.Entity;
 
 namespace OrderezeImageTask.DataAccessLayer
 {
     public class ImageService : IImagesService
     {
-        BlobFunctions    blf = new BlobFunctions();
-        ImageDBFunctions dbf = new ImageDBFunctions();
+        private BlobFunctions    _blobFunctions = new BlobFunctions();
+        private ImageContext     _imageContext = new ImageContext();
 
         /// <summary>
         /// Returns all images 
         /// </summary>
         public List<Image> GetImages()
         {
-            return dbf.getImagesFromDB();
+            return _imageContext.Images.ToList();
         }
 
         /// <summary>
@@ -23,9 +25,9 @@ namespace OrderezeImageTask.DataAccessLayer
         /// </summary>
         public int AddNewImage(Image image)
         {
-            image.ImagePath = blf.uploadFileToBlob(image);
-            image.Id = dbf.insertImageToDb(image);
-
+            image.ImagePath = _blobFunctions.UploadFileToBlob(image);
+            _imageContext.Images.Add(image);
+            _imageContext.SaveChanges();
             return image.Id;
         }
 
@@ -35,7 +37,26 @@ namespace OrderezeImageTask.DataAccessLayer
         /// </summary>
         public void DeleteImage(int id)
         {
-            blf.deleteBlobFile(dbf.deleteImagefromDB(id));
+            Image image = _imageContext.Images.Find(id);
+            _imageContext.Images.Remove(image);
+            _imageContext.SaveChanges();
+            _blobFunctions.DeleteBlobFile(image.ImagePath);
+        }
+
+        public Image FindImage(int? id)
+        {
+            Image image = _imageContext.Images.Find(id);
+            return image;
+        }
+
+        /// <summary>
+        /// Edits Image data
+        /// </summary>
+        public void EditImage(int? id)
+        {
+            Image image = _imageContext.Images.Find(id);
+            _imageContext.Entry(image).State = EntityState.Modified;
+            _imageContext.SaveChanges();
         }
     }
 }

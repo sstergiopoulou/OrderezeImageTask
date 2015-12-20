@@ -13,12 +13,11 @@ namespace OrderezeImageTask.Controllers
 {
     public class ImageController : Controller
     {
-        private ImageContext db = new ImageContext();
-
+        private ImageService _imageService = new ImageService();
         // GET: Image
         public ActionResult Index()  
         {
-            return View(db.Images.ToList());
+            return View(_imageService.GetImages());
         }
 
         // GET: Image/Details/5
@@ -28,7 +27,7 @@ namespace OrderezeImageTask.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Image image = db.Images.Find(id);
+            Image image = _imageService.FindImage(id);
             if (image == null)
             {
                 return HttpNotFound();
@@ -51,22 +50,21 @@ namespace OrderezeImageTask.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Images.Add(image);
-                db.SaveChanges();
+                _imageService.AddNewImage(image);
                 return RedirectToAction("Index");
             }
 
             return View(image);
         }
 
-        // GET: Image/Edit/5
+        //GET: Image/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Image image = db.Images.Find(id);
+            Image image = _imageService.FindImage(id);
             if (image == null)
             {
                 return HttpNotFound();
@@ -83,8 +81,7 @@ namespace OrderezeImageTask.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(image).State = EntityState.Modified;
-                db.SaveChanges();
+                _imageService.EditImage(image.Id);
                 return RedirectToAction("Index");
             }
             return View(image);
@@ -97,7 +94,7 @@ namespace OrderezeImageTask.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Image image = db.Images.Find(id);
+            Image image = _imageService.FindImage(id);
             if (image == null)
             {
                 return HttpNotFound();
@@ -110,19 +107,17 @@ namespace OrderezeImageTask.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Image image = db.Images.Find(id);
-            db.Images.Remove(image);
-            db.SaveChanges();
+            _imageService.DeleteImage(id);
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        //protected override void Dispose(bool disposing)
+        //{
+        //    if (disposing)
+        //    {
+        //        db.Dispose();
+        //    }
+        //    base.Dispose(disposing);
+        //}
     }
 }

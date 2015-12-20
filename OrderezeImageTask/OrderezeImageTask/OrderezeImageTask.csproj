@@ -184,7 +184,6 @@
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="DataAccessLayer\IImageService.cs" />
     <Compile Include="DataAccessLayer\ImageContext.cs" />
-    <Compile Include="DataAccessLayer\ImageDBFunctions.cs" />
     <Compile Include="DataAccessLayer\ImageDBInitializer.cs" />
     <Compile Include="DataAccessLayer\ImageService.cs" />
     <Compile Include="Global.asax.cs">

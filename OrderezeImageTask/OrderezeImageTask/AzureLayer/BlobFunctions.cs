@@ -12,7 +12,7 @@ namespace OrderezeImageTask.AzureLayer
     public class BlobFunctions
     {
 
-        public CloudBlobClient blobClientConnect(string connstring)
+        public CloudBlobClient BlobClientConnect(string connstring)
         {
             // Retrieve storage account from connection string.
             CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings[connstring].ToString());
@@ -20,7 +20,7 @@ namespace OrderezeImageTask.AzureLayer
             return storageAccount.CreateCloudBlobClient();
         }
 
-        public CloudBlobContainer blobGetContainerRef(CloudBlobClient blobclient, string containerName)
+        public CloudBlobContainer BlobGetContainerRef(CloudBlobClient blobclient, string containerName)
         {
             // Retrieve reference to a previously created container.
             CloudBlobContainer container = blobclient.GetContainerReference(containerName);
@@ -35,13 +35,13 @@ namespace OrderezeImageTask.AzureLayer
             return container;
         }
 
-        public CloudBlockBlob blobGetBlobRef(CloudBlobContainer container, string blobname)
+        public CloudBlockBlob BlobGetBlobRef(CloudBlobContainer container, string blobname)
         {
             // Retrieve reference to a blob named
             return container.GetBlockBlobReference(blobname);
         }
 
-        public void setPublicPermissions(CloudBlobContainer container, BlobContainerPublicAccessType Level)
+        public void SetPublicPermissions(CloudBlobContainer container, BlobContainerPublicAccessType Level)
         {
             container.SetPermissions(
                 new BlobContainerPermissions
@@ -50,15 +50,15 @@ namespace OrderezeImageTask.AzureLayer
                 });
         }
 
-        public void addBlobMetadata(CloudBlockBlob blob, string metadataKey, string metadataValue)
+        public void AddBlobMetadata(CloudBlockBlob blob, string metadataKey, string metadataValue)
         {
             blob.Metadata.Add(metadataKey, metadataValue);
         }
 
-        public string uploadFileToBlob(Image imageforupload)
+        public string UploadFileToBlob(Image imageforupload)
         {
-            var blobcontainer = blobGetContainerRef(blobClientConnect("StorageConnectionString"), "imagecontainer");
-            var blob = blobGetBlobRef(blobcontainer, Guid.NewGuid().ToString() + Path.GetExtension(imageforupload.ImagePath));
+            var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
+            var blob = BlobGetBlobRef(blobcontainer, Guid.NewGuid().ToString() + Path.GetExtension(imageforupload.ImagePath));
             // Create or overwrite the blob with contents from a local file.
             using (var fileStream = System.IO.File.OpenRead(imageforupload.ImagePath))
             {
@@ -71,14 +71,14 @@ namespace OrderezeImageTask.AzureLayer
             return blob.Uri.ToString();
         }
 
-        public List<Image> getBlobFiles()
+        public List<Image> GetBlobFiles()
         {
             List<Image> imageList = new List<Image>();
-            var blobcontainer = blobGetContainerRef(blobClientConnect("StorageConnectionString"), "imagecontainer");
+            var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
             // Loop over items within the container and get image list
             foreach (var blobItem in blobcontainer.ListBlobs())
             {
-                var aBlob = blobGetBlobRef(blobcontainer, blobItem.Uri.AbsoluteUri);
+                var aBlob = BlobGetBlobRef(blobcontainer, blobItem.Uri.AbsoluteUri);
                 aBlob.FetchAttributes();
 
                 imageList.Add(new Image()
@@ -92,10 +92,10 @@ namespace OrderezeImageTask.AzureLayer
             return imageList;
         }
 
-        public void deleteBlobFile(string bloburi)
+        public void DeleteBlobFile(string bloburi)
         {
-            var blobcontainer = blobGetContainerRef(blobClientConnect("StorageConnectionString"), "imagecontainer");
-            var blob = blobGetBlobRef(blobcontainer, Path.GetFileName(bloburi));
+            var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
+            var blob = BlobGetBlobRef(blobcontainer, Path.GetFileName(bloburi));
             // Delete the blob if exists.
             blob.DeleteIfExists();
         }
