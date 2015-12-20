@@ -1,0 +1,39 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OrderezeImageTask", "OrderezeImageTask\OrderezeImageTask.csproj", "{27CDAC74-A9CA-4CBD-A9DE-F6A803701C31}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PublishScripts", "PublishScripts", "{067C7A85-D43B-4B13-8638-9F1D5930FDE4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{B4A8BD98-FDAB-4513-AA8E-EF9C56B5FB22}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Scripts\Deploy-AzureResourceGroup.ps1 = PublishScripts\Scripts\Deploy-AzureResourceGroup.ps1
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{40D5ABE3-DDC2-4823-B889-E17FDE6FAF93}"
+	ProjectSection(SolutionItems) = preProject
+		PublishScripts\Templates\OrderezeImageTask.json = PublishScripts\Templates\OrderezeImageTask.json
+		PublishScripts\Templates\OrderezeImageTask.param.dev.json = PublishScripts\Templates\OrderezeImageTask.param.dev.json
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{27CDAC74-A9CA-4CBD-A9DE-F6A803701C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27CDAC74-A9CA-4CBD-A9DE-F6A803701C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27CDAC74-A9CA-4CBD-A9DE-F6A803701C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27CDAC74-A9CA-4CBD-A9DE-F6A803701C31}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B4A8BD98-FDAB-4513-AA8E-EF9C56B5FB22} = {067C7A85-D43B-4B13-8638-9F1D5930FDE4}
+		{40D5ABE3-DDC2-4823-B889-E17FDE6FAF93} = {067C7A85-D43B-4B13-8638-9F1D5930FDE4}
+	EndGlobalSection
+EndGlobal
