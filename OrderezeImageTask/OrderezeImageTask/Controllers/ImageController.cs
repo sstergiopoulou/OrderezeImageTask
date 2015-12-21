@@ -81,7 +81,7 @@ namespace OrderezeImageTask.Controllers
         {
             if (ModelState.IsValid)
             {
-                _imageService.EditImage(image.Id);
+                _imageService.EditImage(image);
                 return RedirectToAction("Index");
             }
             return View(image);

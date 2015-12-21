@@ -52,9 +52,8 @@ namespace OrderezeImageTask.DataAccessLayer
         /// <summary>
         /// Edits Image data
         /// </summary>
-        public void EditImage(int? id)
+        public void EditImage(Image image)
         {
-            Image image = _imageContext.Images.Find(id);
             _imageContext.Entry(image).State = EntityState.Modified;
             _imageContext.SaveChanges();
         }
