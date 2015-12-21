@@ -27,8 +27,7 @@ namespace OrderezeImageTask.Models
         /// <summary>
         /// The path the actual image is stored (normally the blob storage reference)
         /// </summary>
-        [Required, Display(Name = "ImagePath"),
-         StringLength(1000, ErrorMessage = "Image path cannot be longer than 1000 characters.")]
+        [Display(Name = "ImagePath"), StringLength(1000, ErrorMessage = "Image path cannot be longer than 1000 characters.")]
         public string ImagePath { get; set; }
     }
 }

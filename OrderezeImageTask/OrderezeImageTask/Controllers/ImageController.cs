@@ -46,11 +46,16 @@ namespace OrderezeImageTask.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,ImagePath")] Image image)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,ImagePath")] Image image, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
-                _imageService.AddNewImage(image);
+             //if (file != null)
+             //   {
+             //       file.SaveAs(HttpContext.Server.MapPath("~/Images/")+ file.FileName);
+             //       image.ImagePath = file.FileName;
+             //   }
+                _imageService.AddNewImage(image, file);
                 return RedirectToAction("Index");
             }
 

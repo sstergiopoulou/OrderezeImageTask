@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using OrderezeImageTask.Models;
+using System.Web;
 
 namespace OrderezeImageTask.DataAccessLayer
 {
@@ -18,7 +19,7 @@ namespace OrderezeImageTask.DataAccessLayer
         /// Adds the supplied <paramref name="image"/> to the system and returns the Id.
         /// Part of the operation is to store the Image in the blob storage.
         /// </summary>
-        int AddNewImage(Image image);
+        int AddNewImage(Image image, HttpPostedFileBase file);
 
         /// <summary>
         /// Deletes the Image with the supplied <paramref name="id"/> from the system 

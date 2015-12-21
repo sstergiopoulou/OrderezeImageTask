@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using OrderezeImageTask.Models;
-
+using System.Web;
 
 namespace OrderezeImageTask.AzureLayer
 {
@@ -55,21 +55,36 @@ namespace OrderezeImageTask.AzureLayer
             blob.Metadata.Add(metadataKey, metadataValue);
         }
 
-        public string UploadFileToBlob(Image imageforupload)
+        public string UploadFileToBlob(Image imageforupload, HttpPostedFileBase file)
         {
             var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
-            var blob = BlobGetBlobRef(blobcontainer, Guid.NewGuid().ToString() + Path.GetExtension(imageforupload.ImagePath));
-            // Create or overwrite the blob with contents from a local file.
-            using (var fileStream = System.IO.File.OpenRead(imageforupload.ImagePath))
+            if (file != null)
             {
-                blob.UploadFromStream(fileStream);
+                CloudBlockBlob blockBlob = blobcontainer.GetBlockBlobReference(file.FileName);
+                blockBlob.UploadFromStream(file.InputStream);
+                blockBlob.Properties.ContentType = System.Web.MimeMapping.GetMimeMapping(imageforupload.ImagePath);
+                blockBlob.SetProperties();
+                // Return a URI for viewing the photo
+                return blockBlob.Uri.ToString();
             }
-
-            blob.Properties.ContentType = System.Web.MimeMapping.GetMimeMapping(imageforupload.ImagePath);
-            blob.SetProperties();
-            // Return a URI for viewing the photo
-            return blob.Uri.ToString();
+            else return "Error in uploading photo";
         }
+
+        //public string UploadFileToBlob(Image imageforupload)
+        //{
+        //    var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
+        //    var blob = BlobGetBlobRef(blobcontainer, Guid.NewGuid().ToString() + Path.GetExtension(imageforupload.ImagePath));
+        //    // Create or overwrite the blob with contents from a local file.
+        //    using (var fileStream = System.IO.File.OpenRead(imageforupload.ImagePath))
+        //    {
+        //        blob.UploadFromStream(fileStream);
+        //    }
+
+        //    blob.Properties.ContentType = System.Web.MimeMapping.GetMimeMapping(imageforupload.ImagePath);
+        //    blob.SetProperties();
+        //    // Return a URI for viewing the photo
+        //    return blob.Uri.ToString();
+        //}
 
         public List<Image> GetBlobFiles()
         {

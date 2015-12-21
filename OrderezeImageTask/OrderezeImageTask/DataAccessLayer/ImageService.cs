@@ -3,6 +3,7 @@ using OrderezeImageTask.Models;
 using OrderezeImageTask.AzureLayer;
 using System.Linq;
 using System.Data.Entity;
+using System.Web;
 
 namespace OrderezeImageTask.DataAccessLayer
 {
@@ -23,9 +24,16 @@ namespace OrderezeImageTask.DataAccessLayer
         /// Adds the supplied <paramref name="image"/> to the system and returns the Id.
         /// Store the Image in the blob storage.
         /// </summary>
-        public int AddNewImage(Image image)
+        //public int AddNewImage(Image image)
+        //{
+        //    image.ImagePath = _blobFunctions.UploadFileToBlob(image);
+        //    _imageContext.Images.Add(image);
+        //    _imageContext.SaveChanges();
+        //    return image.Id;
+        //}
+        public int AddNewImage(Image image, HttpPostedFileBase file)
         {
-            image.ImagePath = _blobFunctions.UploadFileToBlob(image);
+            image.ImagePath = _blobFunctions.UploadFileToBlob(image, file);
             _imageContext.Images.Add(image);
             _imageContext.SaveChanges();
             return image.Id;
