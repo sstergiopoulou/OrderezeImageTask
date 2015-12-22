@@ -62,29 +62,25 @@ namespace OrderezeImageTask.AzureLayer
             {
                 CloudBlockBlob blockBlob = blobcontainer.GetBlockBlobReference(file.FileName);
                 blockBlob.UploadFromStream(file.InputStream);
-                blockBlob.Properties.ContentType = System.Web.MimeMapping.GetMimeMapping(imageforupload.ImagePath);
-                blockBlob.SetProperties();
                 // Return a URI for viewing the photo
                 return blockBlob.Uri.ToString();
             }
             else return "Error in uploading photo";
         }
 
-        //public string UploadFileToBlob(Image imageforupload)
-        //{
-        //    var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
-        //    var blob = BlobGetBlobRef(blobcontainer, Guid.NewGuid().ToString() + Path.GetExtension(imageforupload.ImagePath));
-        //    // Create or overwrite the blob with contents from a local file.
-        //    using (var fileStream = System.IO.File.OpenRead(imageforupload.ImagePath))
-        //    {
-        //        blob.UploadFromStream(fileStream);
-        //    }
+        public string UploadFromBytes(byte[] fileBytes, HttpPostedFileBase file)
+        {
+            var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
+            // Create the container and blob.
+            CloudBlockBlob blockBlob = blobcontainer.GetBlockBlobReference(file.FileName);
 
-        //    blob.Properties.ContentType = System.Web.MimeMapping.GetMimeMapping(imageforupload.ImagePath);
-        //    blob.SetProperties();
-        //    // Return a URI for viewing the photo
-        //    return blob.Uri.ToString();
-        //}
+            // Set the content type to image
+            blockBlob.Properties.ContentType = "image/" + Path.GetExtension(file.FileName).Replace(".", "");
+            blockBlob.UploadFromByteArray(fileBytes, 0, fileBytes.Length - 1);
+
+            // Return a URI fro viewing the photo
+            return blockBlob.Uri.AbsoluteUri;
+        }
 
         public List<Image> GetBlobFiles()
         {

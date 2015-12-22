@@ -4,6 +4,8 @@ using OrderezeImageTask.AzureLayer;
 using System.Linq;
 using System.Data.Entity;
 using System.Web;
+using System;
+using System.Data;
 
 namespace OrderezeImageTask.DataAccessLayer
 {
@@ -24,15 +26,12 @@ namespace OrderezeImageTask.DataAccessLayer
         /// Adds the supplied <paramref name="image"/> to the system and returns the Id.
         /// Store the Image in the blob storage.
         /// </summary>
-        //public int AddNewImage(Image image)
-        //{
-        //    image.ImagePath = _blobFunctions.UploadFileToBlob(image);
-        //    _imageContext.Images.Add(image);
-        //    _imageContext.SaveChanges();
-        //    return image.Id;
-        //}
         public int AddNewImage(Image image, HttpPostedFileBase file)
         {
+            //if (file == null || file.ContentLength == 0)
+            //{
+            //    return null;
+            //}
             image.ImagePath = _blobFunctions.UploadFileToBlob(image, file);
             _imageContext.Images.Add(image);
             _imageContext.SaveChanges();
@@ -60,10 +59,25 @@ namespace OrderezeImageTask.DataAccessLayer
         /// <summary>
         /// Edits Image data
         /// </summary>
-        public void EditImage(Image image)
+        public void EditImage(Image image, HttpPostedFileBase file)
         {
             _imageContext.Entry(image).State = EntityState.Modified;
             _imageContext.SaveChanges();
         }
+
+        //Search
+        public IQueryable <Image> SearchImage(string searchString)
+        {
+            var images = from s in _imageContext.Images
+                         select s;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                images = images.Where(s => s.Name.Contains(searchString));
+            }
+            images = images.OrderBy(s => s.Name);
+            return images;
+        }
+
+
     }
 }

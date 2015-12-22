@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Net;
+﻿using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using OrderezeImageTask.DataAccessLayer;
@@ -14,11 +9,25 @@ namespace OrderezeImageTask.Controllers
     public class ImageController : Controller
     {
         private ImageService _imageService = new ImageService();
-        // GET: Image
-        public ActionResult Index()  
+
+        //Search image
+        public ViewResult Index(string searchString, int? page)
         {
-            return View(_imageService.GetImages());
+            if (searchString != null)
+            {
+                page = 1;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var images = _imageService.SearchImage(searchString);
+
+            int pageSize = 3;
+            int pageNumber = (page ?? 1);
+            // return View(images.ToPagedList(pageNumber, pageSize));
+            return View(images);
         }
+
 
         // GET: Image/Details/5
         public ActionResult Details(int? id)
@@ -50,11 +59,6 @@ namespace OrderezeImageTask.Controllers
         {
             if (ModelState.IsValid)
             {
-             //if (file != null)
-             //   {
-             //       file.SaveAs(HttpContext.Server.MapPath("~/Images/")+ file.FileName);
-             //       image.ImagePath = file.FileName;
-             //   }
                 _imageService.AddNewImage(image, file);
                 return RedirectToAction("Index");
             }
@@ -82,11 +86,11 @@ namespace OrderezeImageTask.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,ImagePath")] Image image)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description,ImagePath")] Image image, HttpPostedFileBase file)
         {
             if (ModelState.IsValid)
             {
-                _imageService.EditImage(image);
+                _imageService.EditImage(image, file);
                 return RedirectToAction("Index");
             }
             return View(image);
@@ -116,6 +120,11 @@ namespace OrderezeImageTask.Controllers
             return RedirectToAction("Index");
         }
 
+        // GET: Image
+        //public ActionResult Index()  
+        //{
+        //    return View(_imageService.GetImages());
+        //}
         //protected override void Dispose(bool disposing)
         //{
         //    if (disposing)
@@ -124,5 +133,6 @@ namespace OrderezeImageTask.Controllers
         //    }
         //    base.Dispose(disposing);
         //}
+
     }
 }
