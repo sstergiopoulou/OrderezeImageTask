@@ -40,3 +40,9 @@
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+<div class="form-group">
+    <hr /><h4>Image</h4>
+    @if (Model.ImagePath != null)
+    {<img src="@Model.ImagePath" />}
+</div>

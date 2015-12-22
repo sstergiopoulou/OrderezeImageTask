@@ -6,33 +6,53 @@ using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using OrderezeImageTask.Models;
 using System.Web;
+using OrderezeImageTask.Logging;
 
 namespace OrderezeImageTask.AzureLayer
 {
     public class BlobFunctions
     {
+        ILogger log = null;
 
         public CloudBlobClient BlobClientConnect(string connstring)
         {
-            // Retrieve storage account from connection string.
-            CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings[connstring].ToString());
-            // Create and return the blob client.
-            return storageAccount.CreateCloudBlobClient();
+            try
+            {
+                // Retrieve storage account from connection string.
+                CloudStorageAccount storageAccount = CloudStorageAccount.Parse(ConfigurationManager.AppSettings[connstring].ToString());
+                log.Information("Successfully retrieved storage account from connection string (BlobFunctions:BlobClientConnect)");
+                // Create and return the blob client.
+                return storageAccount.CreateCloudBlobClient();
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Failure to retrieve storage account from connection string (BlobFunctions:BlobClientConnect)");
+                throw;
+            }
         }
 
         public CloudBlobContainer BlobGetContainerRef(CloudBlobClient blobclient, string containerName)
         {
-            // Retrieve reference to a previously created container.
-            CloudBlobContainer container = blobclient.GetContainerReference(containerName);
-            // Create the container if it doesn't already exist.
-            container.CreateIfNotExists();
-            // By default, the new container is private, so we set set the container to be public
-            container.SetPermissions(
-                new BlobContainerPermissions
-                {
-                    PublicAccess = BlobContainerPublicAccessType.Container
-                });
-            return container;
+            try
+            {
+                // Retrieve reference to a previously created container.
+                CloudBlobContainer container = blobclient.GetContainerReference(containerName);
+                // Create the container if it doesn't already exist.
+                container.CreateIfNotExists();
+                // By default, the new container is private, so we set set the container to be public
+                container.SetPermissions(
+                    new BlobContainerPermissions
+                    {
+                        PublicAccess = BlobContainerPublicAccessType.Container
+                    });
+                log.Information("Successfully retrieved reference to a container and set permissions (BlobFunctions:BlobGetContainerRef)");
+                return container;
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Failure to retrieve reference to a container and set permissions (BlobFunctions:BlobGetContainerRef)");
+                throw;
+            }          
         }
 
         public CloudBlockBlob BlobGetBlobRef(CloudBlobContainer container, string blobname)
@@ -57,15 +77,29 @@ namespace OrderezeImageTask.AzureLayer
 
         public string UploadFileToBlob(Image imageforupload, HttpPostedFileBase file)
         {
-            var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
-            if (file != null)
+            try
             {
-                CloudBlockBlob blockBlob = blobcontainer.GetBlockBlobReference(file.FileName);
-                blockBlob.UploadFromStream(file.InputStream);
-                // Return a URI for viewing the photo
-                return blockBlob.Uri.ToString();
+                var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
+                if (file != null)
+                {
+                    CloudBlockBlob blockBlob = blobcontainer.GetBlockBlobReference(file.FileName);
+                    blockBlob.UploadFromStream(file.InputStream);
+                    log.Information("Successfully uploaded image (BlobFunctions:UploadFileToBlob)");
+                    // Return a URI for viewing the photo
+                    return blockBlob.Uri.ToString();
+                }
+                else
+                {
+                    log.Error("EX-1", "Error in uploading photo");
+                    return null;
+                }  
             }
-            else return "Error in uploading photo";
+            catch (Exception ex)
+            {
+                log.Error(ex, "Failure to upload image (BlobFunctions:UploadFileToBlob)");
+                throw;
+            }
+
         }
 
         public string UploadFromBytes(byte[] fileBytes, HttpPostedFileBase file)
@@ -105,10 +139,19 @@ namespace OrderezeImageTask.AzureLayer
 
         public void DeleteBlobFile(string bloburi)
         {
-            var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
-            var blob = BlobGetBlobRef(blobcontainer, Path.GetFileName(bloburi));
-            // Delete the blob if exists.
-            blob.DeleteIfExists();
+            try
+            {
+                var blobcontainer = BlobGetContainerRef(BlobClientConnect("StorageConnectionString"), "imagecontainer");
+                var blob = BlobGetBlobRef(blobcontainer, Path.GetFileName(bloburi));
+                // Delete the blob if exists.
+                blob.DeleteIfExists();
+                log.Information("Successfully deleted blob (BlobFunctions:DeleteBlobFile)");
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Failure to delete blob (BlobFunctions:DeleteBlobFile)");
+                throw;
+            }
         }
     }
 }

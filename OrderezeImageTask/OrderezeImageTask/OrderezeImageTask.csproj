@@ -189,6 +189,10 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Logging\ImageInterceptorLogging.cs" />
+    <Compile Include="Logging\ImageInterceptorTransientErrors.cs" />
+    <Compile Include="Logging\Interface1.cs" />
+    <Compile Include="Logging\Logger.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

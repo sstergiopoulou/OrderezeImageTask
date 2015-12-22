@@ -6,6 +6,7 @@ using System.Data.Entity;
 using System.Web;
 using System;
 using System.Data;
+using OrderezeImageTask.Logging;
 
 namespace OrderezeImageTask.DataAccessLayer
 {
@@ -13,6 +14,7 @@ namespace OrderezeImageTask.DataAccessLayer
     {
         private BlobFunctions    _blobFunctions = new BlobFunctions();
         private ImageContext     _imageContext = new ImageContext();
+        ILogger log = null;
 
         /// <summary>
         /// Returns all images 
@@ -28,13 +30,18 @@ namespace OrderezeImageTask.DataAccessLayer
         /// </summary>
         public int AddNewImage(Image image, HttpPostedFileBase file)
         {
-            //if (file == null || file.ContentLength == 0)
-            //{
-            //    return null;
-            //}
-            image.ImagePath = _blobFunctions.UploadFileToBlob(image, file);
-            _imageContext.Images.Add(image);
-            _imageContext.SaveChanges();
+            try
+            {
+                image.ImagePath = _blobFunctions.UploadFileToBlob(image, file);
+                _imageContext.Images.Add(image);
+                _imageContext.SaveChanges();
+                log.Information("Successfully add new image (ImageService:AddNewImage)");
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Failure to add new image (ImageService:AddNewImage)");
+                throw;
+            }
             return image.Id;
         }
 
@@ -44,10 +51,19 @@ namespace OrderezeImageTask.DataAccessLayer
         /// </summary>
         public void DeleteImage(int id)
         {
-            Image image = _imageContext.Images.Find(id);
-            _imageContext.Images.Remove(image);
-            _imageContext.SaveChanges();
-            _blobFunctions.DeleteBlobFile(image.ImagePath);
+            try
+            {
+                Image image = _imageContext.Images.Find(id);
+                _imageContext.Images.Remove(image);
+                _imageContext.SaveChanges();
+                _blobFunctions.DeleteBlobFile(image.ImagePath);
+                log.Information("Successfully deleted image (ImageService:DeleteImage)");
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Failure to delete image (ImageService:DeleteImage)");
+                throw;
+            }
         }
 
         public Image FindImage(int? id)
