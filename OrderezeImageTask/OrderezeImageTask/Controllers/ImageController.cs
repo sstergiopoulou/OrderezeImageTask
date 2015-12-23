@@ -21,10 +21,7 @@ namespace OrderezeImageTask.Controllers
             ViewBag.CurrentFilter = searchString;
 
             var images = _imageService.SearchImage(searchString);
-
-          //  int pageSize = 3;
             int pageNumber = (page ?? 1);
-            // return View(images.ToPagedList(pageNumber, pageSize));
             return View(images);
         }
 
@@ -96,16 +93,6 @@ namespace OrderezeImageTask.Controllers
             return View(image);
         }
 
-        //public ActionResult Edit([Bind(Include = "Id,Name,Description,ImagePath")] Image image, HttpPostedFileBase file)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        _imageService.EditImage(image, file);
-        //        return RedirectToAction("Index");
-        //    }
-        //    return View(image);
-        //}
-
         // GET: Image/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -129,20 +116,6 @@ namespace OrderezeImageTask.Controllers
             _imageService.DeleteImage(id);
             return RedirectToAction("Index");
         }
-
-        // GET: Image
-        //public ActionResult Index()  
-        //{
-        //    return View(_imageService.GetImages());
-        //}
-        //protected override void Dispose(bool disposing)
-        //{
-        //    if (disposing)
-        //    {
-        //        db.Dispose();
-        //    }
-        //    base.Dispose(disposing);
-        //}
 
     }
 }
