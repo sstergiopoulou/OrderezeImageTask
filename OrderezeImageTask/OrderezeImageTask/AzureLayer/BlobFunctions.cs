@@ -12,7 +12,7 @@ namespace OrderezeImageTask.AzureLayer
 {
     public class BlobFunctions
     {
-        ILogger log = null;
+        ILogger log = new Logger();
 
         public CloudBlobClient BlobClientConnect(string connstring)
         {
@@ -92,7 +92,7 @@ namespace OrderezeImageTask.AzureLayer
                 {
                     log.Error("EX-1", "Error in uploading photo");
                     return null;
-                }  
+                }
             }
             catch (Exception ex)
             {

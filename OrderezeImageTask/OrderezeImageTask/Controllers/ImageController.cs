@@ -22,7 +22,7 @@ namespace OrderezeImageTask.Controllers
 
             var images = _imageService.SearchImage(searchString);
 
-            int pageSize = 3;
+          //  int pageSize = 3;
             int pageNumber = (page ?? 1);
             // return View(images.ToPagedList(pageNumber, pageSize));
             return View(images);
@@ -86,15 +86,25 @@ namespace OrderezeImageTask.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,ImagePath")] Image image, HttpPostedFileBase file)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description,ImagePath")] Image image)
         {
             if (ModelState.IsValid)
             {
-                _imageService.EditImage(image, file);
+                _imageService.EditImage(image);
                 return RedirectToAction("Index");
             }
             return View(image);
         }
+
+        //public ActionResult Edit([Bind(Include = "Id,Name,Description,ImagePath")] Image image, HttpPostedFileBase file)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        _imageService.EditImage(image, file);
+        //        return RedirectToAction("Index");
+        //    }
+        //    return View(image);
+        //}
 
         // GET: Image/Delete/5
         public ActionResult Delete(int? id)

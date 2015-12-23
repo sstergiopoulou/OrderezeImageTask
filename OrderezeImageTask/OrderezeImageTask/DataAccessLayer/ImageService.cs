@@ -14,7 +14,7 @@ namespace OrderezeImageTask.DataAccessLayer
     {
         private BlobFunctions    _blobFunctions = new BlobFunctions();
         private ImageContext     _imageContext = new ImageContext();
-        ILogger log = null;
+        ILogger log = new Logger();
 
         /// <summary>
         /// Returns all images 
@@ -39,7 +39,7 @@ namespace OrderezeImageTask.DataAccessLayer
             }
             catch (Exception ex)
             {
-                log.Error(ex, "Failure to add new image (ImageService:AddNewImage)");
+                log.Error(ex, "failure to add new image (imageservice:addnewimage)");
                 throw;
             }
             return image.Id;
@@ -75,10 +75,22 @@ namespace OrderezeImageTask.DataAccessLayer
         /// <summary>
         /// Edits Image data
         /// </summary>
-        public void EditImage(Image image, HttpPostedFileBase file)
+        public void EditImage(Image image)
         {
-            _imageContext.Entry(image).State = EntityState.Modified;
-            _imageContext.SaveChanges();
+            try
+            {
+                Image imageToUpload = _imageContext.Images.Find(image.Id);
+                imageToUpload.Name = image.Name;
+                imageToUpload.Description = image.Description;
+                image = imageToUpload;
+                _imageContext.SaveChanges();
+                log.Information("Successfully edited image (ImageService:EditImage)");
+            }
+            catch (Exception ex)
+            {
+                log.Error(ex, "Failure edited image (ImageService:EditImage)");
+                throw;
+            }
         }
 
         //Search
